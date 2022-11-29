@@ -22,8 +22,8 @@ function Write-Log {
 
 #region Foxit Reader
 try {
-    Start-Process -filepath msiexec.exe -Wait -ErrorAction Stop -ArgumentList '/i', 'c:\temp\FoxitReader101_enu_Setup.msi', '/quiet', 'ADDLOCAL="FX_PDFVIEWER"'
-    if (Test-Path "C:\Program Files (x86)\Foxit Software\Foxit Reader\FoxitReader.exe") {
+    Start-Process -filepath msiexec.exe -Wait -ErrorAction Stop -ArgumentList '/i', 'c:\temp\FoxitPDFReader1202_enu_Setup.msi', '/quiet', 'ADDLOCAL="FX_PDFVIEWER"'
+    if (Test-Path "C:\Program Files\Foxit Software\Foxit Reader\FoxitReader.exe") {
         Write-Log "Foxit Reader has been installed"
     }
     else {
@@ -38,9 +38,7 @@ catch {
 
 #region Notepad++
 try {
-    Start-Process -filepath 'c:\temp\npp.7.8.8.Installer.x64.exe' -Wait -ErrorAction Stop -ArgumentList '/S'
-    Copy-Item 'C:\temp\config.model.xml' 'C:\Program Files\Notepad++'
-    Rename-Item 'C:\Program Files\Notepad++\updater' 'C:\Program Files\Notepad++\updaterOld'
+    Start-Process -filepath 'c:\temp\npp.8.4.7.Installer.x64.exe' -Wait -ErrorAction Stop -ArgumentList '/S'
     if (Test-Path "C:\Program Files\Notepad++\notepad++.exe") {
         Write-Log "Notepad++ has been installed"
     }
@@ -56,31 +54,31 @@ catch {
 
 #region Sysprep Fix
 # Fix for first login delays due to Windows Module Installer
-try {
-    ((Get-Content -path C:\DeprovisioningScript.ps1 -Raw) -replace 'Sysprep.exe /oobe /generalize /quiet /quit', 'Sysprep.exe /oobe /generalize /quit /mode:vm' ) | Set-Content -Path C:\DeprovisioningScript.ps1
-    write-log "Sysprep Mode:VM fix applied"
-}
-catch {
-    $ErrorMessage = $_.Exception.message
-    write-log "Error updating script: $ErrorMessage"
-}
-#endregion
+#try {
+#    ((Get-Content -path C:\DeprovisioningScript.ps1 -Raw) -replace 'Sysprep.exe /oobe /generalize /quiet /quit', 'Sysprep.exe /oobe /generalize /quit /mode:vm' ) | Set-Content -Path C:\DeprovisioningScript.ps1
+#    write-log "Sysprep Mode:VM fix applied"
+#}
+#catch {
+#    $ErrorMessage = $_.Exception.message
+#    write-log "Error updating script: $ErrorMessage"
+#}
+##endregion
 
 #region Time Zone Redirection
-$Name = "fEnableTimeZoneRedirection"
-$value = "1"
+#$Name = "fEnableTimeZoneRedirection"
+#$value = "1"
 # Add Registry value
-try {
-    New-ItemProperty -ErrorAction Stop -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" -Name $name -Value $value -PropertyType DWORD -Force
-    if ((Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services").PSObject.Properties.Name -contains $name) {
-        Write-log "Added time zone redirection registry key"
-    }
-    else {
-        write-log "Error locating the Teams registry key"
-    }
-}
-catch {
-    $ErrorMessage = $_.Exception.message
-    write-log "Error adding teams registry KEY: $ErrorMessage"
-}
-#endregion
+#try {
+#    New-ItemProperty -ErrorAction Stop -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" -Name $name -Value $value -PropertyType DWORD -Force
+#    if ((Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services").PSObject.Properties.Name -contains $name) {
+#        Write-log "Added time zone redirection registry key"
+#    }
+#    else {
+#        write-log "Error locating the Teams registry key"
+#    }
+#}
+#catch {
+#    $ErrorMessage = $_.Exception.message
+#    write-log "Error adding teams registry KEY: $ErrorMessage"
+#}
+##endregion
